@@ -38,7 +38,7 @@ export default function AboutMe() {
                 <p className="text-gray-400 text-sm">Years Experience</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-[#7B61FF]">3.43/4.00</p>
+                <p className="text-3xl font-bold text-[#7B61FF]">3.58/4.00</p>
                 <p className="text-gray-400 text-sm">GPA</p>
               </div>
             </div>

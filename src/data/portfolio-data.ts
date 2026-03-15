@@ -16,7 +16,6 @@ export const personalInfo = {
   email: "razancollege06@gmail.com",
   location: "Surabaya, Indonesia",
   availability: "Open to opportunities",
-  // ✅ Ganti avatar generator dengan foto lokal kamu
   profileImage: profilePhoto,
 };
 
@@ -114,10 +113,10 @@ export const projects = [
 export const experience = [
   {
     year: "2025 - Present",
-    title: "Data Analyst Internship",
-    company: "Kimia Farma",
+    title: "Mining Technology Engineer",
+    company: "PT Berau Coal Energy",
     description:
-      "professionals tasked with collecting, cleaning, analyzing, and interpreting raw data to discover trends, patterns, and actionable insights for Kimia Farma institutions",
+      "",
   },
 ];
 

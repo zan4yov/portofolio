@@ -67,6 +67,35 @@ export default function ProjectCard({
           ))}
         </div>
 
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          {demoUrl && (
+            <Button
+              variant="default"
+              size="sm"
+              className="flex-1"
+              asChild
+            >
+              <a href={demoUrl} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Demo
+              </a>
+            </Button>
+          )}
+          {githubUrl && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              asChild
+            >
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+                <Github className="w-4 h-4 mr-2" />
+                Code
+              </a>
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Corner Accent */}
