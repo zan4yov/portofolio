@@ -1,12 +1,12 @@
 // INSTRUKSI: Edit data di sini untuk mengubah konten portfolio Anda
 
-import profilePhoto from "@/assets/profile.jpeg"; 
-import project1 from "@/assets/project-1.png";
-import project2 from "@/assets/project-2.png";
-import project3 from "@/assets/project-3.jpeg";
-import project4 from "@/assets/project-4.jpeg";
-import project5 from "@/assets/project-5.png";
-import project6 from "@/assets/project-6.png";
+import profilePhoto from "@/assets/profile.webp";
+import project1 from "@/assets/project-1.webp";
+import project2 from "@/assets/project-2.webp";
+import project3 from "@/assets/project-3.webp";
+import project4 from "@/assets/project-4.webp";
+import project5 from "@/assets/project-5.webp";
+import project6 from "@/assets/project-6.webp";
 
 export const personalInfo = {
   name: "Razan Widya Reswara",

@@ -33,6 +33,9 @@ export default function ProjectCard({
           <img
             src={image}
             alt={title}
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           />
         ) : (

@@ -10,88 +10,80 @@ export default function FaultyTerminalBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.fillStyle = 'rgb(17, 24, 39)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+
+    const chars = '01>_${}[]<>/\\|~`';
+    const fontSize = 14;
+    let drops: number[] = [];
+    let scanlineY = 0;
+    let flickerOpacity = 1;
+    let frameId = 0;
+    let running = true;
+
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      const columns = Math.floor(canvas.width / fontSize);
+      drops = Array.from({ length: columns }, () => Math.random() * -100);
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Terminal characters for background
-    const chars = '01>_${}[]<>/\\|~`';
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops: number[] = [];
-
-    // Initialize drops
-    for (let i = 0; i < columns; i++) {
-      drops[i] = Math.random() * -100;
-    }
-
-    let scanlineY = 0;
-    let glitchOffset = 0;
-    let flickerOpacity = 1;
-
     const animate = () => {
-      // Semi-transparent black for trail effect
+      if (!running) return;
+
       ctx.fillStyle = 'rgba(17, 24, 39, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Terminal characters
-      ctx.fillStyle = 'rgba(0, 245, 255, 0.08)'; // Cyber cyan with low opacity
+      ctx.fillStyle = 'rgba(0, 245, 255, 0.08)';
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
-        // Random character
         const char = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize;
         const y = drops[i] * fontSize;
-
         ctx.fillText(char, x, y);
-
-        // Reset drop randomly
-        if (y > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
+        if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
 
-      // Scanline effect
       ctx.fillStyle = 'rgba(0, 245, 255, 0.03)';
       ctx.fillRect(0, scanlineY, canvas.width, 2);
       scanlineY += 3;
       if (scanlineY > canvas.height) scanlineY = 0;
 
-      // Random glitch effect
       if (Math.random() > 0.98) {
-        glitchOffset = Math.random() * 5 - 2.5;
-        ctx.fillStyle = 'rgba(127, 255, 212, 0.05)'; // Mint green
+        ctx.fillStyle = 'rgba(127, 255, 212, 0.05)';
         ctx.fillRect(
           Math.random() * canvas.width,
           Math.random() * canvas.height,
           Math.random() * 200,
           Math.random() * 5
         );
-      } else {
-        glitchOffset = 0;
       }
 
-      // Flicker effect
       if (Math.random() > 0.95) {
         flickerOpacity = Math.random() * 0.5 + 0.5;
       } else {
         flickerOpacity = 1;
       }
-
       canvas.style.opacity = flickerOpacity.toString();
 
-      requestAnimationFrame(animate);
+      frameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    frameId = requestAnimationFrame(animate);
 
     return () => {
+      running = false;
+      cancelAnimationFrame(frameId);
       window.removeEventListener('resize', resizeCanvas);
     };
   }, []);

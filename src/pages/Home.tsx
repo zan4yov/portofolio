@@ -172,6 +172,10 @@ export default function Home() {
                   <img
                     src={project.image}
                     alt={project.title}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fetchPriority={index === 0 ? "high" : undefined}
+                    decoding="async"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
                   />
                 </div>

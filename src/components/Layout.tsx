@@ -116,24 +116,21 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Right: Navigation Buttons */}
           <div className="flex items-center gap-3 bg-[#0a0a0a]/70 p-2 rounded-xl border border-[#00D4FF]/20">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `p-3 rounded-lg flex items-center justify-center transition-all ${
-                      isActive
-                        ? "bg-[#00D4FF]/30 text-[#00D4FF] shadow-[0_0_12px_rgba(0,212,255,0.4)]"
-                        : "hover:bg-[#00D4FF]/10 text-gray-300 hover:text-[#00D4FF]"
-                    }`
-                  }
-                >
-                  <item.icon className="w-5 h-5" />
-                </NavLink>
-              );
-            })}
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `p-3 rounded-lg flex items-center justify-center transition-all ${
+                    isActive
+                      ? "bg-[#00D4FF]/30 text-[#00D4FF] shadow-[0_0_12px_rgba(0,212,255,0.4)]"
+                      : "hover:bg-[#00D4FF]/10 text-gray-300 hover:text-[#00D4FF]"
+                  }`
+                }
+              >
+                <item.icon className="w-5 h-5" />
+              </NavLink>
+            ))}
           </div>
         </div>
       </footer>
