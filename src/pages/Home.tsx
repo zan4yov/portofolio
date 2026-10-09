@@ -1,226 +1,146 @@
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
-import ProfileCard from "@/components/ProfileCard";
-import TypingText from "@/components/TypingText";
-import TechBadge from "@/components/TechBadge";
-import { Button } from "@/components/ui/button";
-import AboutMe from "@/components/AboutMe";
-import { personalInfo, techStack, projects } from "@/data/portfolio-data";
+import { Link } from "react-router-dom"
+import { ArrowRight, Github } from "lucide-react"
+import ContourField from "@/components/ContourField"
+import PageSection from "@/components/PageSection"
+import PortraitPlate from "@/components/PortraitPlate"
+import ProjectRecord from "@/components/ProjectRecord"
+import Reveal from "@/components/Reveal"
+import SectionHead from "@/components/SectionHead"
+import { Button } from "@/components/ui/button"
+import { facts, personalInfo, projects, socialLinks } from "@/data/portfolio-data"
+
+const SELECTED = projects.slice(0, 3)
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      {/* 🧠 Hero Section */}
-      <section className="min-h-[80vh] flex flex-col lg:flex-row items-center justify-between gap-12 mb-20">
-        {/* Left: Text Content */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex-1 space-y-6"
-        >
-          <div className="text-secondary text-sm font-mono">{">"} Hello, World! 👋</div>
+    <>
+      {/*
+        Hero. The contour field is the one bold element on the page, so the
+        type beside it stays plain and left-aligned, and the entrance runs as a
+        single sequence: terrain first, then status, headline and actions.
+      */}
+      <section className="relative isolate overflow-hidden border-b border-hairline">
+        <ContourField className="hero-mask pointer-events-none absolute inset-0 -z-10 h-full w-full" />
 
-          <div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">
-              <TypingText
-                text={`I'm ${personalInfo.name}`}
-                className="text-foreground"
-                speed={80}
-              />
-            </h1>
-            <h2 className="text-2xl md:text-3xl text-primary font-semibold">
-              {personalInfo.title}
-            </h2>
-          </div>
-
-          <p className="text-lg text-muted-foreground max-w-xl">
-            {personalInfo.tagline}
-          </p>
-
-          <div className="flex flex-wrap gap-4 pt-4">
-            <Button
-              asChild
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 glow-cyan"
-            >
-              <Link to="/projects">
-                View Projects
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
-
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-secondary text-secondary hover:bg-secondary/10"
-            >
-              <Link to="/contact">
-                Get in Touch
-                <Sparkles className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-muted border border-border rounded-full"
-          >
-            <span className="w-2 h-2 bg-secondary rounded-full animate-glow-pulse" />
-            <span className="text-sm text-muted-foreground">
-              {personalInfo.availability}
+        <div className="container flex min-h-[32rem] flex-col justify-center py-20 md:min-h-[38rem] md:py-28">
+          <Reveal className="flex items-center gap-2.5 text-sm text-ink-dim" delay={120}>
+            <span aria-hidden="true" className="relative grid h-2.5 w-2.5 place-items-center">
+              <span className="absolute inset-0 animate-pulse-soft rounded-full bg-secondary/40" />
+              <span className="h-1.5 w-1.5 rounded-full bg-secondary" />
             </span>
-          </motion.div>
-        </motion.div>
+            {personalInfo.availability}
+          </Reveal>
 
-        {/* Right: Profile Card */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex-1 w-full max-w-md"
-        >
-          <ProfileCard
-            avatarUrl={personalInfo.profileImage}
-            name={personalInfo.name}
-            title={personalInfo.title}
-            handle="razanwr"
-            status={personalInfo.availability}
-            contactText="Contact Me"
-            onContactClick={() => (window.location.href = "/contact")}
-          />
-        </motion.div>
+          <Reveal as="h1" className="mt-6 text-display font-extrabold text-ink" delay={200} shift={14}>
+            Razan Widya
+            <br />
+            Reswara
+          </Reveal>
+
+          <Reveal className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1" delay={300}>
+            <span className="text-heading font-semibold text-primary">{personalInfo.role}</span>
+            <span aria-hidden="true" className="hidden h-4 w-px bg-hairline-strong sm:block" />
+            <span className="text-heading font-medium text-ink-dim">{personalInfo.title}</span>
+          </Reveal>
+
+          <Reveal className="measure mt-7 text-lead text-ink-dim" delay={380}>
+            {personalInfo.summary}
+          </Reveal>
+
+          <Reveal className="mt-9 flex flex-wrap items-center gap-3" delay={460}>
+            <Button asChild size="lg">
+              <Link to="/projects">
+                View projects
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a href={socialLinks.github} target="_blank" rel="noopener noreferrer">
+                <Github className="mr-2 h-4 w-4" aria-hidden="true" />
+                GitHub profile
+                <span className="sr-only">, opens in a new tab</span>
+              </a>
+            </Button>
+          </Reveal>
+        </div>
       </section>
 
-      {/* 🌟 About Me Section */}
-      <AboutMe />
-
-      {/* 🧠 Tech Stack Section */}
-      <section className="py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-8"
-        >
-          <h2 className="text-3xl font-bold mb-3 text-foreground">
-            {"<Tech Stack />"}
-          </h2>
-          <p className="text-muted-foreground">Technologies I work with</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.1 }}
-          className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto"
-        >
-          {techStack.map((tech, index) => (
-            <motion.div
-              key={tech.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
+      <PageSection>
+        <SectionHead
+          title="About"
+          action={
+            <Link
+              to="/about"
+              className="shrink-0 text-sm font-medium text-primary underline decoration-primary/40 underline-offset-4 transition-colors duration-base ease-out hover:decoration-primary"
             >
-              <TechBadge name={tech.name} logo={tech.logo} />
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
+              Full background
+            </Link>
+          }
+        />
 
-      {/* 🚀 Project Preview Section */}
-      <section className="py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl font-bold mb-3 text-foreground">Projects</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Showcasing a selection of projects that reflect my skills, creativity,
-            and passion for building meaningful digital experiences.
-          </p>
-        </motion.div>
+        <div className="mt-10 grid gap-10 md:grid-cols-12 md:gap-12">
+          <Reveal className="md:col-span-5 lg:col-span-4 lg:max-w-sm">
+            <PortraitPlate />
+          </Reveal>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.1 }}
-          className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
-        >
-          {projects.slice(0, 3).map((project, index) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="rounded-xl border border-[#7B61FF]/40 bg-black/40 backdrop-blur-md p-6 shadow-[0_0_25px_rgba(123,97,255,0.2)] hover:shadow-[0_0_35px_rgba(123,97,255,0.4)] transition-all duration-500"
-            >
-              {/* Gambar */}
-              {project.image && (
-                <div className="w-full h-48 mb-4 overflow-hidden rounded-lg bg-gradient-to-tr from-[#7B61FF]/10 to-transparent">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : undefined}
-                    decoding="async"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
-                  />
+          <Reveal className="md:col-span-7 md:self-center lg:col-span-7 lg:col-start-6" delay={80}>
+            <p className="measure text-lead text-ink-dim">{personalInfo.bio}</p>
+
+            <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-hairline pt-7">
+              {facts.map((fact) => (
+                <div key={fact.label}>
+                  <dt className="sr-only">{fact.label}</dt>
+                  <dd>
+                    <span className="block text-heading font-bold text-primary">{fact.value}</span>
+                    <span className="mt-1 block text-sm text-ink-dim">{fact.label}</span>
+                  </dd>
                 </div>
-              )}
+              ))}
+            </dl>
+          </Reveal>
+        </div>
+      </PageSection>
 
-              {/* Judul dan Deskripsi */}
-              <h3 className="text-xl font-semibold text-white mb-2">
-                {project.title}
-              </h3>
-              <p className="text-sm text-gray-400 mb-4 line-clamp-3">
-                {project.description}
-              </p>
+      <PageSection className="border-t border-hairline">
+        <SectionHead
+          title="Selected work"
+          lead="Three projects that between them cover what I build: product interfaces, analytics dashboards and geospatial analysis."
+          action={
+            <Link
+              to="/projects"
+              className="shrink-0 text-sm font-medium text-primary underline decoration-primary/40 underline-offset-4 transition-colors duration-base ease-out hover:decoration-primary"
+            >
+              All {projects.length} projects
+            </Link>
+          }
+        />
 
-              {/* Tag list */}
-              <div className="flex flex-wrap gap-2 mb-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 text-xs border border-[#7B61FF]/30 text-[#7B61FF] rounded-full"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+        <div className="mt-12 space-y-14 md:space-y-20">
+          {SELECTED.map((project, index) => (
+            <Reveal key={project.title}>
+              <ProjectRecord project={project} index={index} priority={index === 0} />
+            </Reveal>
           ))}
-        </motion.div>
+        </div>
+      </PageSection>
 
-        {/* 🔗 Browse More Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="text-center mt-12"
-        >
-          <Button
-            asChild
-            size="lg"
-            className="bg-[#7B61FF]/80 hover:bg-[#7B61FF] text-white shadow-[0_0_15px_rgba(123,97,255,0.5)] hover:shadow-[0_0_30px_rgba(123,97,255,0.7)] transition-all"
-          >
-            <Link to="/projects">Browse More →</Link>
+      <PageSection className="border-t border-hairline">
+        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-title font-bold text-ink">Looking for an intern?</h2>
+            <p className="measure mt-4 text-lead text-ink-dim">
+              I am open to software engineering internships and junior roles. Tell me what you are
+              building and I will tell you honestly whether I can help.
+            </p>
+          </div>
+          <Button asChild size="lg" className="shrink-0">
+            <Link to="/contact">
+              Get in touch
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            </Link>
           </Button>
-        </motion.div>
-      </section>
-    </div>
-  );
+        </Reveal>
+      </PageSection>
+    </>
+  )
 }
