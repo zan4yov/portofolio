@@ -1,178 +1,131 @@
-import { motion } from 'framer-motion';
-import { Briefcase, Award, Heart } from 'lucide-react';
-import { personalInfo, experience, skills, personality } from '@/data/portfolio-data';
+import { Link } from "react-router-dom"
+import { ArrowRight } from "lucide-react"
+import PageHeader from "@/components/PageHeader"
+import PageSection from "@/components/PageSection"
+import PortraitPlate from "@/components/PortraitPlate"
+import Reveal from "@/components/Reveal"
+import SectionHead from "@/components/SectionHead"
+import TechMatrix from "@/components/TechMatrix"
+import { Button } from "@/components/ui/button"
+import { experience, personality, personalInfo } from "@/data/portfolio-data"
+
+const DETAILS = [
+  { label: "Based in", value: personalInfo.location },
+  { label: "Studying", value: personalInfo.title },
+  { label: "Status", value: personalInfo.availability },
+]
 
 export default function About() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-16"
-      >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-          {'<About Me />'}
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          Get to know me better
-        </p>
-      </motion.div>
+    <>
+      <div className="container">
+        <PageHeader
+          title="About"
+          lead="How I think, where I have worked, and what I build with."
+        />
+      </div>
 
-      {/* Bio Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-16"
-      >
-        <div className="bg-card border border-border rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-              <Heart className="w-6 h-6 text-primary" />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground">Introduction</h2>
-          </div>
-          
-          <div className="space-y-4 text-muted-foreground">
-            {personalInfo.bio.split('\n').map((paragraph, index) => (
-              <p key={index} className="leading-relaxed">
-                {paragraph.trim()}
-              </p>
-            ))}
-          </div>
+      <PageSection>
+        <div className="grid gap-10 md:grid-cols-12 md:gap-12">
+          <Reveal className="md:col-span-5 lg:col-span-4 lg:max-w-sm">
+            <PortraitPlate />
+          </Reveal>
 
-          <div className="mt-6 flex flex-wrap gap-4 text-sm">
-            <div className="px-4 py-2 bg-muted rounded-lg">
-              📍 {personalInfo.location}
-            </div>
-            <div className="px-4 py-2 bg-muted rounded-lg">
-              📧 {personalInfo.email}
-            </div>
-          </div>
+          <Reveal className="md:col-span-7 md:self-center lg:col-span-7 lg:col-start-6" delay={80}>
+            <p className="measure text-lead text-ink-dim">{personalInfo.bio}</p>
+
+            <dl className="mt-10 divide-y divide-hairline border-t border-hairline">
+              {DETAILS.map((detail) => (
+                <div key={detail.label} className="flex flex-wrap gap-x-6 gap-y-1 py-4">
+                  <dt className="w-24 shrink-0 text-sm text-ink-faint">{detail.label}</dt>
+                  <dd className="text-sm font-medium text-ink">{detail.value}</dd>
+                </div>
+              ))}
+              <div className="flex flex-wrap gap-x-6 gap-y-1 py-4">
+                <dt className="w-24 shrink-0 text-sm text-ink-faint">Email</dt>
+                <dd>
+                  <a
+                    href={"mailto:" + personalInfo.email}
+                    className="text-sm font-medium text-primary underline decoration-primary/40 underline-offset-4 transition-colors duration-base ease-out hover:decoration-primary"
+                  >
+                    {personalInfo.email}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </Reveal>
         </div>
-      </motion.section>
+      </PageSection>
 
-      {/* Personality Traits */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-16"
-      >
-        <div className="bg-card border border-border rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center">
-              <Award className="w-6 h-6 text-secondary" />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground">Personality</h2>
-          </div>
+      <PageSection className="border-t border-hairline">
+        <SectionHead title="Experience" />
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {personality.map((trait, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-                className="px-4 py-3 bg-muted rounded-lg text-center text-sm font-medium text-foreground"
+        <Reveal className="mt-10">
+          <ol className="space-y-8">
+            {experience.map((role) => (
+              <li
+                key={role.title + role.company}
+                className="relative border-l border-hairline-strong pl-7"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[3px] top-2 h-1.5 w-1.5 rounded-full bg-primary"
+                />
+                <p className="data text-primary">{role.year}</p>
+                <h3 className="mt-2 text-heading font-semibold text-ink">{role.title}</h3>
+                <p className="mt-1 text-lead text-ink-dim">{role.company}</p>
+                {role.description && (
+                  <p className="measure mt-3 text-lead text-ink-dim">{role.description}</p>
+                )}
+              </li>
+            ))}
+          </ol>
+        </Reveal>
+      </PageSection>
+
+      <PageSection className="border-t border-hairline">
+        <SectionHead
+          title="How I work"
+          lead="The habits colleagues would recognise in me."
+        />
+
+        <Reveal className="mt-8">
+          <ul className="grid gap-x-10 border-t border-hairline sm:grid-cols-2 lg:grid-cols-3">
+            {personality.map((trait) => (
+              <li
+                key={trait}
+                className="border-b border-hairline py-4 text-lead font-medium text-ink"
               >
                 {trait}
-              </motion.div>
+              </li>
             ))}
-          </div>
-        </div>
-      </motion.section>
+          </ul>
+        </Reveal>
+      </PageSection>
 
-      {/* Experience Timeline */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-16"
-      >
-        <div className="bg-card border border-border rounded-xl p-8">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center">
-              <Briefcase className="w-6 h-6 text-accent" />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground">Experience</h2>
-          </div>
+      <PageSection className="border-t border-hairline">
+        <SectionHead title="Stack" lead="What I reach for, grouped by the job it does." />
+        <Reveal className="mt-10">
+          <TechMatrix />
+        </Reveal>
+      </PageSection>
 
-          <div className="space-y-8">
-            {experience.map((exp, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="relative pl-8 border-l-2 border-primary/30"
-              >
-                <div className="absolute -left-[9px] top-0 w-4 h-4 bg-primary rounded-full" />
-                
-                <div className="mb-1">
-                  <span className="text-sm text-primary font-mono">
-                    {exp.year}
-                  </span>
-                </div>
-                
-                <h3 className="text-xl font-bold text-foreground mb-1">
-                  {exp.title}
-                </h3>
-                
-                <p className="text-secondary font-medium mb-2">
-                  {exp.company}
-                </p>
-                
-                <p className="text-sm text-muted-foreground">
-                  {exp.description}
-                </p>
-              </motion.div>
-            ))}
+      <PageSection className="border-t border-hairline">
+        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-title font-bold text-ink">See the work</h2>
+            <p className="measure mt-4 text-lead text-ink-dim">
+              Six projects, with source where the code is public.
+            </p>
           </div>
-        </div>
-      </motion.section>
-
-      {/* Skills */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-      >
-        <div className="bg-card border border-border rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-foreground mb-8 text-center">
-            Skills & Technologies
-          </h2>
-
-          <div className="space-y-6">
-            {Object.entries(skills).map(([category, items], index) => (
-              <motion.div
-                key={category}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <h3 className="text-sm font-bold text-primary uppercase tracking-wide mb-3">
-                  {category}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {items.map((skill, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-muted text-foreground rounded-lg text-sm border border-border"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-    </div>
-  );
+          <Button asChild size="lg" className="shrink-0">
+            <Link to="/projects">
+              View projects
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
+        </Reveal>
+      </PageSection>
+    </>
+  )
 }

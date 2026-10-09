@@ -3,23 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Razan Reswara | Portfolio</title>
-    <meta name="description" content="Portfolio website of Razan Reswara — showcasing projects, skills, and experiences in computer science and web development." />
+
+    <title>Razan Widya Reswara — Software Engineer</title>
+    <meta
+      name="description"
+      content="Informatics engineering student and software engineer in Surabaya, Indonesia. I build web applications and turn geospatial and economic data into tools people can act on."
+    />
     <meta name="author" content="Razan Widya Reswara" />
+    <link rel="canonical" href="https://razan-widya-portfolio.vercel.app/" />
+
+    <link rel="icon" type="image/svg+xml" href="/mark.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <meta name="theme-color" content="#14181a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e9e8e2" media="(prefers-color-scheme: light)" />
 
     <!-- Open Graph / Social Preview -->
-    <meta property="og:title" content="Razan Reswara | Portfolio" />
-    <meta property="og:description" content="Explore Razan Reswara’s developer portfolio — featuring modern web projects, data analysis work, and interactive design." />
+    <meta property="og:title" content="Razan Widya Reswara — Software Engineer" />
+    <meta
+      property="og:description"
+      content="Web applications, Power BI dashboards and geospatial analysis. Selected work, stack and contact."
+    />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://razan-widya-portfolio.vercel.app/" />
+    <meta property="og:image" content="https://razan-widya-portfolio.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Razan Widya Reswara, software engineer, over a topographic contour field." />
 
     <!-- Twitter Preview -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@razanvvr" />
+    <meta name="twitter:image" content="https://razan-widya-portfolio.vercel.app/og.png" />
 
-    <!-- Monospace Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!--
+      Resolve the theme before first paint so the page never flashes the wrong
+      one. Mirrors next-themes' storage key and `defaultTheme="dark"`.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var dark =
+            stored === "light"
+              ? false
+              : stored === "system"
+              ? window.matchMedia("(prefers-color-scheme: dark)").matches
+              : true;
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400..600&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body>

@@ -1,80 +1,89 @@
-import { motion } from 'framer-motion';
-import { Rocket } from 'lucide-react';
-import ProjectCard from '@/components/ProjectCard';
-import { projects } from '@/data/portfolio-data';
+import { useMemo, useState } from "react"
+import { Link } from "react-router-dom"
+import { ArrowRight } from "lucide-react"
+import PageHeader from "@/components/PageHeader"
+import PageSection from "@/components/PageSection"
+import ProjectFilter, { type Filter } from "@/components/ProjectFilter"
+import ProjectRecord from "@/components/ProjectRecord"
+import Reveal from "@/components/Reveal"
+import { Button } from "@/components/ui/button"
+import { projects } from "@/data/portfolio-data"
 
 export default function Projects() {
-  return (
-    <div className="container mx-auto px-4 py-12">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-16"
-      >
-        <div className="inline-flex items-center gap-3 px-6 py-3 bg-primary/10 border border-primary/30 rounded-full mb-6">
-          <Rocket className="w-5 h-5 text-primary animate-float" />
-          <span className="text-sm font-medium text-primary">Projects</span>
-        </div>
-        
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-          {'<My Work />'}
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          A collection of projects I've built, ranging from web applications to
-          open-source contributions. Each project showcases different skills and technologies.
-        </p>
-      </motion.div>
+  const [filter, setFilter] = useState<Filter>("All")
 
-      {/* Projects Grid */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={index}
-            {...project}
-          />
-        ))}
+  // Counts and options both come from the projects that actually exist, so a
+  // filter can never offer a slice that turns out to be empty.
+  const { options, counts } = useMemo(() => {
+    const tally: Record<string, number> = { All: projects.length }
+    for (const project of projects) {
+      tally[project.discipline] = (tally[project.discipline] ?? 0) + 1
+    }
+    const present = Object.keys(tally).filter((key) => key !== "All" && tally[key] > 0)
+    return { options: ["All", ...present] as Filter[], counts: tally }
+  }, [])
+
+  const visible = useMemo(
+    () => (filter === "All" ? projects : projects.filter((p) => p.discipline === filter)),
+    [filter]
+  )
+
+  return (
+    <>
+      <div className="container">
+        <PageHeader
+          title="Projects"
+          lead="Six projects across web applications, business intelligence and geospatial analysis. Each one lists what it is built from and, where the code is public, a link to read it."
+        />
       </div>
 
-      {/* Empty State Message */}
-      {projects.length === 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-20"
-        >
-          <div className="text-6xl mb-4">🚧</div>
-          <h3 className="text-2xl font-bold text-foreground mb-2">
-            Projects Coming Soon
-          </h3>
-          <p className="text-muted-foreground">
-            I'm working on some exciting projects. Check back later!
-          </p>
-        </motion.div>
-      )}
+      <PageSection>
+        <ProjectFilter options={options} active={filter} onChange={setFilter} counts={counts} />
 
-      {/* Call to Action */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mt-20 text-center"
-      >
-        <div className="bg-card border border-border rounded-xl p-8 max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-foreground mb-3">
-            Have a project in mind?
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            I'm always interested in hearing about new projects and opportunities.
-          </p>
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-          >
-            Let's Talk
-          </a>
-        </div>
-      </motion.div>
-    </div>
-  );
+        {/* Announced on change, so the filter is usable without sighted scanning. */}
+        <p aria-live="polite" className="data mt-4 text-ink-faint">
+          Showing {visible.length} of {projects.length} projects
+        </p>
+
+        {visible.length > 0 ? (
+          <div className="mt-12 space-y-14 md:space-y-20">
+            {visible.map((project, index) => (
+              <Reveal key={project.title}>
+                <ProjectRecord project={project} index={index} priority={index === 0} />
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-12 border-t border-hairline pt-10">
+            <h2 className="text-heading font-semibold text-ink">Nothing filed under {filter}</h2>
+            <p className="measure mt-3 text-lead text-ink-dim">
+              There is no work in this discipline yet. The other disciplines have projects to
+              read.
+            </p>
+            <Button className="mt-6" variant="outline" onClick={() => setFilter("All")}>
+              Show all projects
+            </Button>
+          </div>
+        )}
+      </PageSection>
+
+      <PageSection className="border-t border-hairline">
+        <Reveal className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-title font-bold text-ink">Want the details?</h2>
+            <p className="measure mt-4 text-lead text-ink-dim">
+              Happy to walk through any of these: the decisions, what broke, and what I would
+              build differently now.
+            </p>
+          </div>
+          <Button asChild size="lg" className="shrink-0">
+            <Link to="/contact">
+              Get in touch
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
+        </Reveal>
+      </PageSection>
+    </>
+  )
 }

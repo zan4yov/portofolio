@@ -2,52 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ===========================================================================
+   Design tokens — "Survey"
+   ---------------------------------------------------------------------------
+   The palette is drawn from the subject matter: graphite rock, bone paper,
+   hi-vis survey ochre and copper-ore green. Every colour is an HSL triplet so
+   Tailwind and the shadcn primitives can compose alpha with `hsl(var(--x) / a)`.
+
+   `:root` is the light theme (drafting paper). `.dark` is the default, applied
+   before first paint by the bootstrap script in index.html.
+   =========================================================================== */
 
 @layer base {
   :root {
-    /* Terminal Dark Theme - Gen-Z Aesthetic */
-    --background: 220 15% 8%;
-    --foreground: 180 10% 85%;
+    /* Surfaces */
+    --background: 51 14% 90%;
+    --surface-raised: 50 19% 94%;
+    --surface-sunk: 53 12% 85%;
 
-    --card: 220 15% 10%;
-    --card-foreground: 180 10% 85%;
+    /* Ink */
+    --foreground: 192 9% 11%;
+    --ink-dim: 180 4% 35%;
+    --ink-faint: 171 3% 40%;
 
-    --popover: 220 15% 10%;
-    --popover-foreground: 180 10% 85%;
+    /* Structure */
+    --border: 55 9% 77%;
+    --hairline-strong: 55 6% 64%;
+    --input: 55 9% 77%;
+    --ring: 38 82% 29%;
 
-    /* Cyber Cyan Primary */
-    --primary: 187 100% 50%;
-    --primary-foreground: 220 15% 8%;
+    /* Accents — survey brass, ore green, hematite */
+    --primary: 38 82% 29%;
+    --primary-foreground: 50 19% 94%;
+    --secondary: 155 39% 30%;
+    --secondary-foreground: 50 19% 94%;
+    --accent: 14 64% 37%;
+    --accent-foreground: 50 19% 94%;
+    --destructive: 14 64% 37%;
+    --destructive-foreground: 50 19% 94%;
 
-    /* Mint Green Secondary */
-    --secondary: 165 80% 65%;
-    --secondary-foreground: 220 15% 8%;
+    /* shadcn surface aliases */
+    --card: 50 19% 94%;
+    --card-foreground: 192 9% 11%;
+    --popover: 50 19% 94%;
+    --popover-foreground: 192 9% 11%;
+    --muted: 53 12% 85%;
+    --muted-foreground: 180 4% 35%;
 
-    /* Muted Terminal Gray */
-    --muted: 220 10% 20%;
-    --muted-foreground: 180 5% 60%;
+    --radius: 0.25rem;
 
-    /* Soft Purple Accent */
-    --accent: 270 60% 65%;
-    --accent-foreground: 220 15% 8%;
+    /* Motion — one timing language for the whole site */
+    --dur-fast: 120ms;
+    --dur-base: 220ms;
+    --dur-slow: 520ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  }
 
-    --destructive: 0 85% 60%;
-    --destructive-foreground: 180 10% 85%;
+  .dark {
+    --background: 200 13% 9%;
+    --surface-raised: 196 13% 12%;
+    --surface-sunk: 192 14% 7%;
 
-    --border: 220 15% 18%;
-    --input: 220 15% 15%;
-    --ring: 187 100% 50%;
+    --foreground: 44 19% 88%;
+    --ink-dim: 173 5% 62%;
+    --ink-faint: 173 5% 50%;
 
-    --radius: 0.75rem;
+    --border: 191 11% 19%;
+    --hairline-strong: 190 9% 26%;
+    --input: 191 11% 19%;
+    --ring: 38 65% 57%;
 
-    /* Terminal Green for effects */
-    --terminal-green: 142 76% 36%;
-    --glow-cyan: 187 100% 50%;
-    --glow-mint: 165 80% 65%;
-    --glow-purple: 270 60% 65%;
+    --primary: 38 65% 57%;
+    --primary-foreground: 200 13% 9%;
+    --secondary: 157 29% 51%;
+    --secondary-foreground: 200 13% 9%;
+    --accent: 14 52% 49%;
+    --accent-foreground: 44 19% 88%;
+    --destructive: 14 52% 49%;
+    --destructive-foreground: 44 19% 88%;
+
+    --card: 196 13% 12%;
+    --card-foreground: 44 19% 88%;
+    --popover: 196 13% 12%;
+    --popover-foreground: 44 19% 88%;
+    --muted: 191 11% 19%;
+    --muted-foreground: 173 5% 62%;
   }
 }
 
@@ -56,79 +96,119 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
-    @apply bg-background text-foreground;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    @apply bg-background text-foreground antialiased;
+    font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 100;
+    font-synthesis-weight: none;
   }
 
-  /* Terminal Cursor Effect */
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+  /* Headlines are set expanded and tight — the type is the visual element. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-variation-settings: "wdth" 116;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
   }
 
-  .cursor::after {
-    content: '▋';
-    animation: blink 1s infinite;
-    color: hsl(var(--primary));
+  p {
+    text-wrap: pretty;
   }
 
-  /* Glitch Effect */
-  @keyframes glitch {
-    0% {
-      transform: translate(0);
+  /* One visible focus treatment everywhere, including inside shadcn widgets. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.28);
+    color: hsl(var(--foreground));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
     }
-    20% {
-      transform: translate(-2px, 2px);
-    }
-    40% {
-      transform: translate(-2px, -2px);
-    }
-    60% {
-      transform: translate(2px, 2px);
-    }
-    80% {
-      transform: translate(2px, -2px);
-    }
-    100% {
-      transform: translate(0);
-    }
-  }
 
-  .glitch {
-    animation: glitch 0.3s infinite;
-  }
-
-  /* Glow Effects */
-  .glow-cyan {
-    box-shadow: 0 0 20px hsl(var(--glow-cyan) / 0.5);
-  }
-
-  .glow-mint {
-    box-shadow: 0 0 20px hsl(var(--glow-mint) / 0.5);
-  }
-
-  .glow-purple {
-    box-shadow: 0 0 20px hsl(var(--glow-purple) / 0.5);
-  }
-
-  /* Scanline Effect */
-  @keyframes scanline {
-    0% {
-      transform: translateY(-100%);
-    }
-    100% {
-      transform: translateY(100vh);
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer components {
+  /* Readable measure for prose. */
+  .measure {
+    max-width: 62ch;
   }
 
-  body {
-    @apply bg-background text-foreground;
+  /* Map graticule — the page sits on a survey grid. Pure CSS, no paint loop. */
+  .graticule {
+    background-image: linear-gradient(
+        to right,
+        hsl(var(--border) / 0.5) 0 1px,
+        transparent 1px 100%
+      ),
+      linear-gradient(to bottom, hsl(var(--border) / 0.5) 0 1px, transparent 1px 100%);
+    background-size: 96px 96px;
+    -webkit-mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, #000, transparent 76%);
+    mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, #000, transparent 76%);
+  }
+
+  /*
+     Fades the contour field away from the hero's text column, so the terrain
+     stays dense where there is nothing to read. Prefixed for Safari < 15.4.
+  */
+  .hero-mask {
+    -webkit-mask-image: radial-gradient(118% 108% at 84% 24%, #000 6%, transparent 72%);
+    mask-image: radial-gradient(118% 108% at 84% 24%, #000 6%, transparent 72%);
+  }
+
+  /* Monospace technical data: coordinates, stack strings, record meta. */
+  .data {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    font-variation-settings: normal;
+  }
+}
+
+@layer utilities {
+  /* -------------------------------------------------------------------------
+     Scroll reveal. The IntersectionObserver in `useInView` only flips the
+     `data-reveal` attribute; the transition itself is CSS, so nothing
+     re-renders and reduced-motion opts out completely.
+     ------------------------------------------------------------------------- */
+  [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-shift, 10px), 0);
+    transition: opacity var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+    }
   }
 }

@@ -1,60 +1,61 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect, lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react"
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
+import { ThemeProvider } from "next-themes"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { Toaster } from "@/components/ui/toaster"
+import Layout from "./components/Layout"
+import Home from "./pages/Home"
 
-import Layout from "./components/Layout";
-import Home from "./pages/Home";
+const About = lazy(() => import("./pages/About"))
+const Projects = lazy(() => import("./pages/Projects"))
+const Contact = lazy(() => import("./pages/Contact"))
+const NotFound = lazy(() => import("./pages/NotFound"))
 
-const About = lazy(() => import("./pages/About"));
-const Projects = lazy(() => import("./pages/Projects"));
-const Contact = lazy(() => import("./pages/Contact"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-
+/**
+ * Reserves the height a route occupies while its chunk loads, so the footer
+ * does not jump up the page and back down again.
+ */
 function RouteFallback() {
-  return (
-    <div className="min-h-[40vh] flex items-center justify-center text-muted-foreground text-sm font-mono">
-      Loading…
-    </div>
-  );
+  return <div className="min-h-[60vh]" aria-busy="true" />
 }
 
-// ✅ ScrollToTop helper (auto scroll ke atas saat route berubah)
+/** Routers do not reset scroll on navigation; this does. */
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname } = useLocation()
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "instant" })
+  }, [pathname])
+
+  return null
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        {/* 🧭 Tambahkan ScrollToTop di dalam Router agar bekerja di semua halaman */}
-        <ScrollToTop />
+  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Layout>
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </Layout>
+        </BrowserRouter>
+        <Toaster />
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
+)
 
-        <Layout>
-          <Suspense fallback={<RouteFallback />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
-
-export default App;
+export default App
